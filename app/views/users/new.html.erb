@@ -1,26 +1,26 @@
 <%= provide(:title, 'Sign Up') %>
 
-                                <div class = "row">
-                                  <div class ="small-10 small-centered medium-4 medium-centered columns">
-                                    <h2 id= "sign_up" > Sign Up </h2>
-                                    <%= form_for (@user) do |f| %>
+      <div class = "row">
+        <div class ="small-10 small-centered medium-4 medium-centered columns">
+          <h2 id= "sign_up" > Sign Up </h2>
+          <%= form_for (@user) do |f| %>
 
-                                      <%= f.label :first_name %>
-                                      <%= f.text_field :first_name %>
+            <%= f.label :first_name %>
+            <%= f.text_field :first_name %>
 
-                                      <%= f.label :last_name %>
-                                      <%= f.text_field :last_name %>
+            <%= f.label :last_name %>
+            <%= f.text_field :last_name %>
 
-                                      <%= f.label :email %>
-                                      <%= f.email_field :email %>
+            <%= f.label :email %>
+            <%= f.email_field :email %>
 
-                                      <%= f.label :password %>
-                                      <%= f.password_field :password %>
+            <%= f.label :password %>
+            <%= f.password_field :password %>
 
-                                      <%= f.label :password_confirmation, 'Please confirm password' %>
-                                      <%= f.password_field :password_confirmation %>
+            <%= f.label :password_confirmation, 'Please confirm password' %>
+            <%= f.password_field :password_confirmation %>
 
-                                      <%= f.submit 'Create Account', class: "expanded button" %>
-                                    <%end%>
-                                  </div>
-                                </div>
+            <%= f.submit 'Create Account', class: "expanded button" %>
+          <%end%>
+        </div>
+      </div>

@@ -410,3 +410,72 @@ create   views/shared/_error_messages.html.erb
         iii. small.error
         iv. a.close
         v..success.callout
+
+
+  TESTING THE SIGNUP FORM
+
+  install 2 gems:
+
+  gem 'factory_girl_rails'
+  gem 'rails-controller-testing'
+
+  create : spec/factories/user.rb
+
+                                FactoryGirl.define do       <= CREATE A VALID user
+                                  factory :user do
+                                    first_name 'John'
+                                    last_name 'Doe'
+                                    email 'john@example.com'
+                                    password 'foobar'
+                                    password_confirmation 'foobar'
+
+
+                                  factory :invalid_user do     <= CREATE A INVALID user
+                                    first_name 'J'
+                                    last_name 'Doe'
+                                    email 'john_at_example'
+                                    password 'foo'
+                                    password_confirmation 'bar'
+                                  end
+                                end
+                                end
+
+  create : spec/controllers/user_signup_spec.rb
+
+                                          require 'rails_helper'
+
+                                          describe UsersController, type: :controller do
+                                            describe 'POST #create' do
+                                              context 'with valid attributes' do
+                                                it 'saves the new user in the database' do
+                                                  expect {
+                                                    process :create, method: :post, params: {user: FactoryGirl.attributes_for(:user)}
+                                                  }.to change(User, :count).by(1)
+                                                end
+
+                                                it 'redirects to users/show' do
+                                                  process :create, method: :post, params: {user: FactoryGirl.attributes_for(:user)}
+                                                  expect(:user).to redirect_to user_path(assigns[:user])
+                                                end
+                                              end
+                                            end
+
+
+                                          end
+
+                                          describe UsersController, type: :controller do
+                                            describe 'POST #create' do
+                                              context 'with valid attributes' do
+                                                it 'does not saves the new user in the database' do
+                                                  expect {
+                                                    process :create, method: :post, params: {user: FactoryGirl.attributes_for(:invalid_user)}
+                                                  }.not_to change(User, :count)
+                                                end
+
+                                                it "render the 'new' template" do
+                                                  process :create, method: :post, params: {user: FactoryGirl.attributes_for(:invalid_user)}
+                                                  expect(response).to render_template :new
+                                                end
+                                              end
+                                            end
+                                          end

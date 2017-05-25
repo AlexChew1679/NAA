@@ -57,7 +57,7 @@ require 'rails_helper'
     end
 
     it 'must have a unique email address' do
-      @user = User.new(first_name: 'Jane', last_name: 'Doe', email: 'PIERRE@example.com')
+      @user = User.new(first_name: 'Jane', last_name: 'Doe', email: 'ALEX@example.com')
       expect(@user).not_to be_valid
     end
 

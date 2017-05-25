@@ -1,0 +1,412 @@
+1. rails new Authentication_App -T
+2.rails g controller StaticPages index help
+3. install gem 'foundation'
+4.rails g foundation:install
+
+      uncomment         @include motion-ui-transitions;
+                        @include motion-ui-animations;    at stylesheets/foundation_and_overrides.scss
+
+create : customized_style.scss
+
+                          .columns {
+                            text-align: center;
+
+                          }
+
+put       at index and help.html.erb
+
+                          <div class = "row">
+                            <div class = "small-12 medium-12 large-12 columns">     <= columns is linked to the above
+                            <h1> Welcome to Authentication Page </h1>
+                          </div>
+
+
+2. Creat User Model
+
+Paths are related to actions and are based on the CRUD model
+
+i. rails g resource User first_name last_name email password_digest
+                        invoke  active_record
+                        create    db/migrate/20170519053026_create_users.rb
+                        create    app/models/user.rb
+                        invoke  controller
+                        create    app/controllers/users_controller.rb
+                        invoke    erb
+                        create      app/views/users
+                        invoke    helper
+                        create      app/helpers/users_helper.rb
+                        invoke    assets
+                        invoke      coffee
+                        create        app/assets/javascripts/users.coffee
+                        invoke      scss
+                        create        app/assets/stylesheets/users.scss
+                        invoke  resource_route
+                         route    resources :users
+
+3. 1st and lastname validation  - users_controller.rb
+
+class UsersController < ApplicationController
+
+
+                                  def index
+                                  end
+
+                                  def new
+                                    @user = User.new
+                                  end
+
+                                  def create
+                                    @user = User.new
+                                    if @user.save
+                                      redirect_to root_path
+                                    else
+                                      render 'new'
+                                  end
+                                end
+
+
+          at users/ new.html.erb : do this to create form          users are create using resource
+
+                                <%= provide(:title, 'Sign Up') %>
+
+                                <div class = "row">
+                                  <div class ="small-10 small-centered medium-4 medium-centered columns">
+                                    <h2 id= "sign_up" > Sign Up </h2>
+                                    <%= form_for (@user) do |f| %>
+
+                                      <%= f.label :first_name %>
+                                      <%= f.text_field :first_name %>
+
+                                      <%= f.label :last_name %>
+                                      <%= f.text_field :last_name %>
+
+                                      <%= f.label :email %>
+                                      <%= f.email_field :email %>
+
+                                      <%= f.label :password %>
+                                      <%= f.password_field :password %>
+
+                                      <%= f.label :password_confirmation, 'Please confirm password' %>
+                                      <%= f.password_field :password_confirmation %>
+
+                                      <%= f.submit 'Create Account', class: "expanded button" %>
+                                    <%end%>
+                                  </div>
+                                </div>
+
+
+Validates First Name last and email
+
+create rspec
+
+                                i.gem 'rspec-rails'
+                                ii. rails g rspec:install
+                                create  .rspec
+                                create  spec
+                                create  spec/spec_helper.rb
+                                create  spec/rails_helper.rb
+
+
+          at .rspec
+          --color - to give the error message color
+
+          --format documentation     => it give us more readable information when we test
+
+at model user.rb
+
+                                  class User < ApplicationRecord
+                                    validates :first_name, presence: true
+                                    validates :last_name, presence: true
+                                    validates :email, presence: true
+                                  end
+
+
+create   spec/models/user_spec.rb
+
+                                      require 'rails_helper'
+
+                                      describe User, type: :model do
+                                        describe 'validations' do
+
+                                          before do
+                                            @user = User.create(first_name: 'Alex', last_name: 'Chew', email: 'alex@alex.com')
+                                          end
+
+                                          it 'can be created' do
+                                            expect(@user).to be_valid
+                                          end
+
+                                          it 'cannot be created without a first name' do
+                                            @user.first_name = nil
+                                            expect(@user).not_to be_valid
+                                          end
+
+                                          it 'cannot be created without a last name' do
+                                            @user.last_name = nil
+                                            expect(@user).not_to be_valid
+                                            end
+
+                                          it 'cannot be created without a email' do
+                                            @user.email = nil
+                                            expect(@user).not_to be_valid
+                                              end
+
+                                          it 'cannot have a short first_name' do
+                                            @user.first_name = 'a' * 2
+                                            expect(@user).not_to be_valid
+                                              end
+
+                                          it 'cannot have a long first_name' do
+                                            @user.first_name = 'a' * 25
+                                            expect(@user).not_to be_valid
+                                              end
+
+                                          it 'cannot have a short last_name' do
+                                                @user.last_name = 'a' * 2
+                                                expect(@user).not_to be_valid
+                                                  end
+
+                                          it 'cannot have a long last_name' do
+                                                @user.last_name = 'a' * 25
+                                                expect(@user).not_to be_valid
+                                                  end
+                                        end
+                                      end
+
+at model => user.rb
+
+                                            class User < ApplicationRecord
+                                              validates :first_name, presence: true, length: {minimum: 3, maximum: 20}
+                                              validates :last_name, presence: true, length: {minimum: 3, maximum: 20}
+                                              validates :email, presence: true
+                                            end
+
+
+            CURRENTLY THE EMAIL DOTNT HAVE A INDEX : rails g migration add_index_to_users_email
+
+            at Migration file :
+
+                                            class AddIndexToUsersEmail < ActiveRecord::Migration[5.0]
+                                              def change
+                                                add_index :users, :email, unique: true
+                                              end
+                                            end
+
+
+Validates Email                           below are from user_spec.rb :
+
+                                          it 'cannot have an invalid address' do
+                                          invalid_addresses = %w[user@example,com user_at_foo.org user.name@example.
+                                          foo@bar_baz.com foo@bar+baz.com]
+
+                                          invalid_addresses.each do |invalid_address|
+                                            @user.email = invalid_address
+                                            expect(@user).not_to be_valid
+                                            end
+                                          end
+
+                                          it 'must have a unique email address' do
+                                            @user = User.new(first_name: 'Jane', last_name: 'Doe', email: 'PIERRE@example.com')
+                                            expect(@user).not_to be_valid
+                                          end
+
+
+modify user.rb to
+
+                                        class User < ApplicationRecord
+
+                                          before_save {self.email = email.downcase}
+
+                                          validates :first_name, presence: true, length: {minimum: 3, maximum: 20}
+                                          validates :last_name, presence: true, length: {minimum: 3, maximum: 20}
+
+                                          VALID_EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+                                          validates :email, presence: true, length: { minimum: 10, maximun: 50}, format: { with: VALID_EMAIL_REGEX },
+                                              uniqueness: { case_sensitive: false }
+                                        end
+
+Validates Password                       user_spec.rb
+
+
+1st uncomment gem 'bcrypt'
+                                      it 'must have a non blank password' do
+                                        @user.password = @user.password_confirmation = ' ' * 6
+                                        expect(@user).not_to be_valid
+                                      end
+
+                                      it 'must have a password with a minimum length' do
+                                        @user.password = @user.password_confirmation = 'a' * 5
+                                        expect(@user).not_to be_valid
+                                      end
+modify user.rb to
+
+                                  class User < ApplicationRecord
+
+                                    before_save {self.email = email.downcase}
+
+                                    validates :first_name, presence: true, length: {minimum: 3, maximum: 20}
+                                    validates :last_name, presence: true, length: {minimum: 3, maximum: 20}
+
+                                    VALID_EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+                                    validates :email, presence: true, length: { minimum: 10, maximun: 50}, format: { with: VALID_EMAIL_REGEX },
+                                        uniqueness: { case_sensitive: false }
+
+                                      has_secure_password
+                                      validates :password, presence: true, length: { minimum: 6 }
+                                  end
+
+
+                                  change this at the top of user_spec.rb ( add password)
+
+                                    before do
+                                    @user = User.create(first_name: 'Alex', last_name: 'Chew', email: 'alex@alex.com', password: 'foobar', password_confirmation: 'foobar')
+                                    end
+
+
+CREATE SHOW VIEW
+
+
+                                      Rails.application.routes.draw do
+                                        resources :users
+                                        root 'static_pages#index'
+
+                                        get '/help', to: 'static_pages#help'
+                                        get 'signup', to: 'users#new'
+
+                                        # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+                                      end
+
+              NOTE:  IF U CHECK RAILS ROUTES, THERE'S NO SIGNUP, IT DOESNT EXIST, SO WHEN U DO THE FOLLOWING
+
+              get 'signup', to: 'users#new'     => IT WILL BRINGS localhost:3000/signup  to  users/new ( CONTROLLER: USERS, VIEW: NEW)
+
+
+
+          stylesheets/customized_style.scss
+
+                                        :root {
+                                          font-size: calc(0.5em + 0.7vw);
+                                        }
+
+                                        h1.title {
+                                        text-align: center;
+                                         }
+
+                                        //Signin forms
+                                        #sign_up {
+                                          margin-top: 1rem;
+                                          text-align: center;
+                                        }
+
+          users/show.html.erb
+
+                                      <%= provide(:title, @user.last_name) %>
+
+                                      <div class="row">
+                                        <div class="small-12 medium-12 columns">
+                                         <h1 class="title">
+                                          <%= gravatar_for @user %>
+                                          <%= @user.first_name + ' ' + @user.last_name %>
+                                          </h1>
+                                        </div>
+                                      </div>
+
+
+        IMPORTANT :
+
+          write: @user = User.new(params[:user]) is about the same as
+
+          @user = User.new(first_name: 'John', last_name: 'Doe', email: 'doe@example.com', password: 'foobar', password_confirmation: 'foobar')
+
+
+
+        modify users_controller.rb
+
+                                    class UsersController < ApplicationController
+                                          def index
+                                          end
+
+                                          def show
+                                            @user = User.find(params[:id])
+                                          end
+
+                                          def new
+                                            @user = User.new
+                                          end
+
+                                          def create
+                                            @user = User.new(user_params)
+                                            if @user.save
+                                              redirect_to root_path
+                                            else
+                                              render 'new'
+                                          end
+                                        end
+
+                                        private
+
+                                        def user_params
+                                        params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+                                        end
+                                      end
+
+
+error messages and banner messages
+
+at application.html.erb =>
+
+                                  <!DOCTYPE html>
+                                  <html lang="en">
+                                    <head>
+                                      <meta charset="utf-8" />
+                                      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                                      <title><%= content_for?(:title) ? yield(:title) : "Untitled" %></title>
+                                      <%= stylesheet_link_tag    "application" %>
+                                      <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
+                                      <%= csrf_meta_tags %>
+                                    </head>
+                                    <body>
+                                      <% if flash[:success] %>
+                                          <div class="success callout" data-closable>
+                                            <%= display_flash_messages %>                    <= NOTE
+                                            <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+                                              <span aria-hidden="true">&times;</span>
+                                            </button>
+                                          </div>
+                                      <% end %>
+                                      <%= yield %>
+                                    </body>
+                                  </html>
+
+
+NOTE:
+
+
+Foundation Rails Helper Build Status  =>  gem 'foundation_rails_helper'
+Gem for Rails 4.1+ applications that use the excellent Zurb Foundation framework.
+Includes:
+A custom FormBuilder that generates a form using the Foundation framework classes. It replaces the current form_for,
+so there is no need to change your Rails code. Error messages are properly displayed.
+A display_flash_messages helper method that uses Zurb Foundation Callout UI.   <= NOTE
+
+
+create   views/shared/_error_messages.html.erb
+
+                                  <% if @user.errors.any? %>
+                                    <div class="alert callout">
+                                      The form contains <%= pluralize(@user.errors.count, 'error') %>
+                                    </div>
+                                    <ul>
+                                      <% @user.errors.full_messages.each do |msg| %>
+                                          <li><%=msg%></li>
+                                          <%end%>
+                                        </ul>
+                                      <%end%>
+
+
+        customized_style.scss : add
+        i.label.error
+        ii. input.error
+        iii. small.error
+        iv. a.close
+        v..success.callout

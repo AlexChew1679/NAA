@@ -419,6 +419,36 @@ create   views/shared/_error_messages.html.erb
   gem 'factory_girl_rails'
   gem 'rails-controller-testing'
 
+  update users_controller.rb
+
+                                def index
+                                end
+
+                                def show
+                                  @user = User.find(params[:id])
+                                end
+
+                                def new
+                                  @user = User.new
+                                end
+
+                                def create
+                                  @user = User.new(user_params)
+                                  if @user.save
+                                    flash[:success] = 'User created successfully'
+                                    redirect_to @user
+                                  else
+                                    render 'new'
+                                end
+                              end
+
+                              private
+
+                              def user_params
+                              params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation)
+                              end
+                              end
+
   create : spec/factories/user.rb
 
                                 FactoryGirl.define do       <= CREATE A VALID user
@@ -507,7 +537,35 @@ at  views/sessions/new.html.erb
 
                                                   <% end %>
                                                 </div>
-                                              </div>
+
+                                            </div>
+  at   app/helpers/sessions_helper.rb
+
+
+                                        module SessionsHelper
+
+                                          # Login in the given user
+
+                                          def log_in(user)
+                                            session[:user_id] = user.id
+                                          end
+
+                                          # Returns the current logged in user, if there is any
+                                          def current_user
+                                            #@current_user = @current_user || User.find_by(id: session[:user_id])
+                                            @current_user ||= User.find_by(id: session[:user_id])
+                                          end
+
+                                          def logged_in?
+                                            !current_user.nil?
+                                          end
+                                        #log out the current user
+                                          def log_out
+                                            session.delete(:user_id)
+                                            @current_user = nil
+                                          end
+                                        end
+
 
             sessions_controller.rb  :
 
@@ -532,6 +590,24 @@ at  views/sessions/new.html.erb
                                                 log_out
                                                 redirect_to root_url
                                               end
-                                            end
+    at config/routes.rb make sure
 
-                  
+                                      Rails.application.routes.draw do
+                                        get 'sessions/new'
+
+                                        resources :users
+                                        root 'users#new'
+
+                                        get 'static_pages/help'
+                                        get 'signup', to: 'users#new'
+
+                                        get '/login', to: 'sessions#new'
+                                        post '/login', to: 'sessions#create'
+    => VERY IMPORTANT                   delete '/logout', to: 'sessions#destroy'
+
+                                        # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+                                      end
+
+
+IS IMPORTANT IF YOU WANNA LOGOUT         <%= link_to 'Logout', logout_path, method: 'delete' %>
+OR LOGIN                                    you're assigning '/logout'    to logout_path

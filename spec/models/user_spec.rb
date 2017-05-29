@@ -71,6 +71,10 @@ require 'rails_helper'
       expect(@user).not_to be_valid
     end
 
+    it 'should return false for a user with nil digest' do
+      expect(@user).not_to_be_valid if @user.authenticated?('')
+    end
+
 
 
       end

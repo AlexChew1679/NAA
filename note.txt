@@ -858,3 +858,25 @@ PERMANANENT SESSION AND FORGET USER    => user.rb
                                           @current_user = nil
                                         end
                                       end
+
+
+  Update USER         models/user.rb
+
+                          VALID_EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+                          validates :email, presence: true, length: { minimum: 10, maximun: 50}, format: { with: VALID_EMAIL_REGEX },
+                              uniqueness: { case_sensitive: false }
+
+                            has_secure_password
+                            validates :password, presence: true, length: { minimum: 6 }, allow_nil: true  <= modify only this line NOTE
+
+        users_controller.rb
+
+                                            def update
+                                              @user = User.find(params[:id])
+                                              if @user.update_attributes(user_params)
+                                                # flash[:success] = 'Profile updated successfully'
+                                                redirect_to @user
+                                              else
+                                                render 'edit'
+                                              end
+                                            end

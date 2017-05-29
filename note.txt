@@ -679,3 +679,56 @@ REMEMBER ME TOKEN
     note: Class methods are for things which dont operate on an individual instance of a model or for cases where you dont have the instance available
           to you, example... you might have a class method to tidy up your DB such as User.purge_expired_users which would not apply to an individual
           user object
+
+
+
+
+          at model/user.rb
+
+                                      class User < ApplicationRecord
+
+                                        attr_accessor :remember_token    <= added here
+
+                                        before_save {self.email = email.downcase}
+
+                                        validates :first_name, presence: true, length: {minimum: 3, maximum: 20}
+                                        validates :last_name, presence: true, length: {minimum: 3, maximum: 20}
+
+                                        VALID_EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+                                        validates :email, presence: true, length: { minimum: 10, maximun: 50}, format: { with: VALID_EMAIL_REGEX },
+                                            uniqueness: { case_sensitive: false }
+
+                                          has_secure_password
+                                          validates :password, presence: true, length: { minimum: 6 }
+
+                                          #return a random token   <= added from this line onwards 
+                                          def User.new_token
+                                            SecureRandom.urlsafe_base64
+                                          end
+
+                                          #return a digest_token of a given string
+
+                                          def User.digest(string)
+                                          cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
+                                          BCrypt::Password.create(string, cost: cost)
+                                        end
+
+                                        # remember a user token in the database for persistent sessions
+
+                                          def remember
+                                            self.remember_token =  User.new_token
+                                            update_attribute(:remember_digest, User.digest(remember_token))
+                                        end
+                                      end
+
+
+                                      cookies[:remember_token] = {value: remember_token, expires: 20.years.from_now.utc}
+                                      cookies.permanent[:remember_token] = remember_token
+
+                                      cookies[:user_id] = user.id
+                                      cookies.permanent.signed [:user_id] = user.id
+
+                                      User.find_by(id: cookies.signed[:user_id])
+
+
+            =>  NOTE: please look at the video35 again: is complicated

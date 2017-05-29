@@ -1,0 +1,48 @@
+1. create a migration file of
+  rails g migration create_tasks.rb
+2. create model task.rb
+3. create tasks_controller.rb  or rails g controller Tasks new create
+4. create tasks folder at view
+5. put def new at tasks_controller
+                          def new
+                            @task = Task.new
+                          end
+
+  at views/tasks/new.html.erb
+                                <h1> New Task </h1>
+
+                                <%= simple_form_for (@task) do |f| %>  <=NOTE  u re assigning @task to Task.new at controller...
+                                    <%= f.input :content %>
+                                    <%= f.button :submit %>
+                                <%end%>
+
+  if you click submit, nothing will happen,
+
+  now modify tasks_controller.rb
+
+  class TasksController < ApplicationController
+
+                                  def new
+                                    @task = Task.new
+                                  end
+
+                                  def create
+                                    @task = Task.new(tasks_params)
+                                    @task.save
+
+                                    redirect_to task_path(@task)
+                                  end
+
+
+                                private
+
+                                  def tasks_params
+                                    params.require(:task).permit(:content)
+                                  end
+
+                                end
+
+  model/task.rb
+                                class Task < ApplicationRecord
+                                  validates :content, presence: true, length: {minimum: 5, maximum: 100}
+                                end

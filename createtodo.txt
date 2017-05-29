@@ -46,3 +46,70 @@
                                 class Task < ApplicationRecord
                                   validates :content, presence: true, length: {minimum: 5, maximum: 100}
                                 end
+
+
+
+
+      CREATE SHOW ACTION
+      application.html.erb
+
+                                      <!DOCTYPE html>
+                                      <html>
+                                        <head>
+                                          <title>NAA</title>
+                                          <%= csrf_meta_tags %>
+
+                                          <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+                                          <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+                                        </head>
+
+                                        <body>
+
+                                          <%= render 'layouts/navbar' %>
+                                          <% flash.each do |name,msg| %>
+                                          <%=msg %>
+                                          <%end%>
+
+                                          <div class = 'container'>
+
+                                          <%= yield %>
+                                        </div>
+                                        </body>
+                                      </html>
+
+    modify the tasks_controller.rb
+
+    class TasksController < ApplicationController
+
+                                      def new
+                                        @task = Task.new
+                                      end
+
+                                      def create
+                                        @task = Task.new(tasks_params)
+                                         if @task.save
+                                           flash[:notice] = "Task was successfully created"
+                                           redirect_to task_path(@task)
+                                         else
+                                           render 'new'
+                                        end
+                                      end
+
+                                      def show
+                                          @task = Task.find(params[:id])
+                                      end
+
+
+                                    private
+
+                                      def tasks_params
+                                        params.require(:task).permit(:content)
+                                      end
+
+                                    end
+
+  create views/tasks/show.html.erb
+
+                                    <h1> Showing Task </h1>
+
+                                    <strong>Content: </strong> <%= @task.content %>

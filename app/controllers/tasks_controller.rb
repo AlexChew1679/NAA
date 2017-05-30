@@ -1,4 +1,5 @@
 class TasksController < ApplicationController
+  #before_action :set_task, only:[:edit, :update, :show, :destroy]
 
   def index
     @tasks = Task.all
@@ -36,8 +37,19 @@ class TasksController < ApplicationController
     end
   end
 
+  def destroy
+    @task = Task.find(params[:id])
+    @task.destroy
+    flash[:notice] = "Todo was successfully deleted"
+    redirect_to tasks_path
+  end
+
 
 private
+
+  # def set_task
+  #   @task = Task.find(params[:id])
+  # end
 
   def tasks_params
     params.require(:task).permit(:content)

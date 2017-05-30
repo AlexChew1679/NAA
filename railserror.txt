@@ -1,0 +1,14 @@
+NoMethodError in Tasks#index
+Showing /home/alexchew/Rails/NAA/app/views/tasks/index.html.erb where line #11 raised:
+
+undefined method `each' for nil:NilClass
+Extracted source (around line #11):
+
+                    </tr>
+
+                    <% @tasks.each do |task|  %>
+                        <tr>
+                          <td><%= task.content %></td>
+                          <td><%= link_to 'Show', task_path(task) %> </td>
+
+  NO METHOD, MEANS NOTHING IS DEFINE IN CONTROLLER... IN INDEX ACTION IN CONTROLLER 

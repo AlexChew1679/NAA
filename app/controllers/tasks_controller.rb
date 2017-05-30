@@ -14,7 +14,7 @@ class TasksController < ApplicationController
   end
 
   def create
-    @task = current_user.tasks.new(tasks_params)      #Task.new(tasks_params)
+    @task = current_user.tasks.new(tasks_params)      
      if @task.save
        flash[:notice] = "Task was successfully created"
        redirect_to task_path(@task)
@@ -56,7 +56,7 @@ private
   # end
 
   def tasks_params
-    params.require(:task).permit(:content, :state)
+    params.require(:task).permit(:content, :state, :image, :resource)
   end
 
 end

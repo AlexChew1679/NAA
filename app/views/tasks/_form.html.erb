@@ -10,6 +10,8 @@
 <%= simple_form_for @task do |f| %>
     <%= f.input :content %>
     <%= f.input :state %> <p> Please enter state: to_do, doing or done </p>
+    <%= f.input :image %>
+    <%= f.input :resource %>
     <%= f.button :submit %>
 
 <%end%>

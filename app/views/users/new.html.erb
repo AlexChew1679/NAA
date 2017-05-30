@@ -3,27 +3,27 @@
       <div class="jumbotron">
 
           <h2 id= "sign_up" > Sign Up </h2>
-          <%= form_for (@user) do |f| %>
-            <ul>
-            <li><%= f.label :first_name %></li>
-            <li><%= f.text_field :first_name %></li>
+          <%= simple_form_for (@user) do |f| %>
 
-            <li><%= f.label :last_name %></li>
-            <li><%= f.text_field :last_name %></li>
+            <%= f.label :first_name %>
+            <%= f.text_field :first_name %>
 
-            <li><%= f.label :email %></li>
-            <li><%= f.email_field :email %></li>
+            <%= f.label :last_name %>
+            <%= f.text_field :last_name %>
 
-            <li><%= f.label :password %></li>
-            <li><%= f.password_field :password %></li>
+            <%= f.label :email %>
+            <%= f.email_field :email %>
 
-            <li><%= f.label :password_confirmation, 'Please confirm password' %></li>
-            <li><%= f.password_field :password_confirmation %></li>
+            <%= f.label :password %>
+            <%= f.password_field :password %>
 
-            <li><%= f.submit 'Create Account', class: "expanded button" %></li>
+            <%= f.label :password_confirmation, 'Please confirm password' %>
+            <%= f.password_field :password_confirmation %>
 
-            <li><%= link_to 'Login', login_path %></li>
+            <%= f.submit 'Create Account', class: "expanded button" %></li>
+
+            <%= link_to 'Login', login_path %></li>
           <%end%>
-        </ul>
+
           </div>
         </div>

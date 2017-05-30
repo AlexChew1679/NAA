@@ -217,3 +217,47 @@ CREATE UPDATE AND EDIT
                                           <%= f.button :submit %>
 
                                       <%end%>
+
+    CREATE DESTROY   add this at tasks_controller.rb
+
+                                    def destroy
+                                      @task = Task.find(params[:id])
+                                      @task.destroy
+                                      flash[:notice] = "Todo was successfully deleted"
+                                      redirect_to tasks_path
+                                    end
+
+
+    add this line at tasks/show.html.erb
+
+      <td><%= link_to 'Delete',task_path(task), method: :delete, data: {confirm: "Are you sure?"} %> </td>
+
+
+CREATE has_many AND belongs_to
+
+rails g migration add_user_id_to_tasks user_id:integer
+
+
+has_many :tasks, dependent: :destroy AT USER.RB
+belongs_to :user  AT TASK.RB
+
+
+modify tasks_controller.rb
+
+                                    def index
+                                      @tasks =  current_user.tasks              =>  #Task.all   before
+                                    end
+
+                                    def new
+                                      @task = Task.new
+                                    end
+
+                                    def create
+                                      @task = current_user.tasks.new(tasks_params)   =>       #Task.new(tasks_params)  before
+                                       if @task.save
+                                         flash[:notice] = "Task was successfully created"
+                                         redirect_to task_path(@task)
+                                       else
+                                         render 'new'
+                                      end
+                                    end

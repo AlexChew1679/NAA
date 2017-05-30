@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   #before_action :set_task, only:[:edit, :update, :show, :destroy]
-  
+
 
   def index
     @tasks =  current_user.tasks #Task.all
@@ -53,7 +53,7 @@ private
   # end
 
   def tasks_params
-    params.require(:task).permit(:content)
+    params.require(:task).permit(:content, :state)
   end
 
 end

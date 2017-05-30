@@ -3,7 +3,10 @@ class TasksController < ApplicationController
 
 
   def index
-    @tasks =  current_user.tasks #Task.all
+    #@tasks =  current_user.tasks #Task.all
+    @to_do = current_user.tasks.where(state: 'to_do')
+    @doing = current_user.tasks.where(state: 'doing')
+    @done = current_user.tasks.where(state: 'done')
   end
 
   def new

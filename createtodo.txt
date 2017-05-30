@@ -261,3 +261,97 @@ modify tasks_controller.rb
                                          render 'new'
                                       end
                                     end
+
+
+    ADD STATES TO TODO
+
+    rails g migration add_state_to_tasks state:string
+
+    at the above migration file, add default: 'to_do'  : every new Task created , we want a default state of todo
+
+    class AddStateToTasks < ActiveRecord::Migration[5.0]
+      def change
+        add_column :tasks, :state, :string, default: 'to_do'
+      end
+    end
+
+
+    modify tasks_controller.rb
+
+                                def index
+                                  #@tasks =  current_user.tasks #Task.all
+                                  @to_do = current_user.tasks.where(state: 'to_do')
+                                  @doing = current_user.tasks.where(state: 'doing')
+                                  @done = current_user.tasks.where(state: 'done')
+                                end
+
+
+    at tasks/index.html.erb
+
+                                      <h1> To Do </h1>
+
+                                      <%=link_to 'New Task', new_task_path %>
+                                      </br>
+
+                                      <table>
+                                        <tr>
+                                      <th> Content </th>
+                                      <th> Status </th>
+
+                                        </tr>
+
+                                        <% @to_do.each do |task|  %>
+                                            <tr>
+                                              <td><%= task.content %></td>
+                                              <td><strong><%= task.state %></strong></td>
+                                              <td><%= link_to 'Show', task_path(task) %> </td>
+                                              <td><%= link_to 'Edit', edit_task_path(task) %> </td>
+                                              <td><%= link_to 'Delete',task_path(task), method: :delete, data: {confirm: "Are you sure?"} %> </td>
+                                            </tr>
+                                            <%end%>
+                                      </table>
+
+                                      <h1> Doing </h1>
+
+                                      </br>
+
+                                      <table>
+                                        <tr>
+                                      <th> Content </th>
+                                      <th> Status </th>
+
+                                        </tr>
+
+                                        <% @doing.each do |task|  %>
+                                            <tr>
+                                              <td><%= task.content %></td>
+                                              <td><strong><%= task.state %></strong></td>
+                                              <td><%= link_to 'Show', task_path(task) %> </td>
+                                              <td><%= link_to 'Edit', edit_task_path(task) %> </td>
+                                              <td><%= link_to 'Delete',task_path(task), method: :delete, data: {confirm: "Are you sure?"} %> </td>
+                                            </tr>
+                                            <%end%>
+                                      </table>
+
+                                      <h1> Done </h1>
+
+
+                                      </br>
+
+                                      <table>
+                                        <tr>
+                                      <th> Content </th>
+                                      <th> Status </th>
+
+                                        </tr>
+
+                                        <% @done.each do |task|  %>
+                                            <tr>
+                                              <td><%= task.content %></td>
+                                              <td><strong><%= task.state %></strong></td>
+                                              <td><%= link_to 'Show', task_path(task) %> </td>
+                                              <td><%= link_to 'Edit', edit_task_path(task) %> </td>
+                                              <td><%= link_to 'Delete',task_path(task), method: :delete, data: {confirm: "Are you sure?"} %> </td>
+                                            </tr>
+                                            <%end%>
+                                      </table>

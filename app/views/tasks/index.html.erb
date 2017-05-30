@@ -1,4 +1,4 @@
-<h1> All Task </h1>
+<h1> To Do </h1>
 
 <%=link_to 'New Task', new_task_path %>
 </br>
@@ -10,7 +10,52 @@
 
   </tr>
 
-  <% @tasks.each do |task|  %>
+  <% @to_do.each do |task|  %>
+      <tr>
+        <td><%= task.content %></td>
+        <td><strong><%= task.state %></strong></td>
+        <td><%= link_to 'Show', task_path(task) %> </td>
+        <td><%= link_to 'Edit', edit_task_path(task) %> </td>
+        <td><%= link_to 'Delete',task_path(task), method: :delete, data: {confirm: "Are you sure?"} %> </td>
+      </tr>
+      <%end%>
+</table>
+
+<h1> Doing </h1>
+
+</br>
+
+<table>
+  <tr>
+<th> Content </th>
+<th> Status </th>
+
+  </tr>
+
+  <% @doing.each do |task|  %>
+      <tr>
+        <td><%= task.content %></td>
+        <td><strong><%= task.state %></strong></td>
+        <td><%= link_to 'Show', task_path(task) %> </td>
+        <td><%= link_to 'Edit', edit_task_path(task) %> </td>
+        <td><%= link_to 'Delete',task_path(task), method: :delete, data: {confirm: "Are you sure?"} %> </td>
+      </tr>
+      <%end%>
+</table>
+
+<h1> Done </h1>
+
+
+</br>
+
+<table>
+  <tr>
+<th> Content </th>
+<th> Status </th>
+
+  </tr>
+
+  <% @done.each do |task|  %>
       <tr>
         <td><%= task.content %></td>
         <td><strong><%= task.state %></strong></td>

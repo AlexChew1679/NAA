@@ -9,7 +9,7 @@
 
 <%= simple_form_for @task do |f| %>
     <%= f.input :content %>
-    <%= f.input :state %>
+    <%= f.input :state %> <p> Please enter state: to_do, doing or done </p>
     <%= f.button :submit %>
 
 <%end%>

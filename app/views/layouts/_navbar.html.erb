@@ -24,6 +24,7 @@
     <% if current_user %>
       <li>  <%= link_to 'New Todos' , new_task_path  %> </li>
       <li>  <%= link_to 'Todos' , tasks_path  %> </li>
+      <li>  <%= link_to 'Users' , users_path  %> </li>
       <li>  <%= link_to 'Logout', logout_path, method: 'delete' %></li>
     <%else%>
       <li><%= link_to 'Sign Up', signup_path %> </li>

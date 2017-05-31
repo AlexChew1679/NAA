@@ -7,10 +7,10 @@
 </ul>
 <%end%>
 
-<%= simple_form_for @task do |f| %>
+<%= simple_form_for @task, url: tasks_path  do |f| %>
     <%= f.input :content %>
     <%= f.input :state %> <p> Please enter state: to_do, doing or done </p>
-    <%= f.input :image %>
+    <%= f.input :image, as: :file %>
     <%= f.input :resource %>
     <%= f.button :submit %>
 

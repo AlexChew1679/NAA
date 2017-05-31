@@ -3,7 +3,6 @@
 <strong>Content: </strong> <%= @task.content %>
 <strong>State: </strong> <%= @task.state %>
 
-
 <p>
 <%= link_to 'All Todos', tasks_path %>  |
 <%= link_to 'Edit Todos', edit_task_path(@task) %>
@@ -11,3 +10,28 @@
 
 
 <!-- paste image file here -->
+<%= link_to image_tag(@task.image.url(:med)), @task.image.url %>
+
+<div style='width: 800px;'>
+  <div id="map" style='width: 800px; height: 400px;'></div>
+</div>
+
+<script type="text/javascript">
+  handler = Gmaps.build('Google');
+  handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+    markers = handler.addMarkers([
+      {
+        "lat": 35.681298,
+        "lng": 139.7640529,
+        "picture": {
+          "url": "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
+          "width":  64,
+          "height": 64
+        },
+        "infowindow": "hello!"
+      }
+    ]);
+    handler.bounds.extendWith(markers);
+    handler.fitMapToBounds();
+  });
+</script>

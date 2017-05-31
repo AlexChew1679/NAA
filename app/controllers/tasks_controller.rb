@@ -25,10 +25,21 @@ class TasksController < ApplicationController
 
   def show
       @task = Task.find(params[:id])
+
+      # Show data map      
+      _latitude = '35.681298'
+      _longitude = '139.7640529'
+      _name = '東京駅'
+
+      @hash = Gmaps4rails.build_markers(@task) do |place, marker|
+        marker.lat _latitude
+        marker.lng _longitude
+        marker.infowindow _name
+      end
   end
 
   def edit
-    @task = Task.find(params[:id])
+    @task = Task.find(params[:id])    
   end
 
   def update

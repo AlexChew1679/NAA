@@ -62,3 +62,5 @@ gem 'simple_form'
 gem "paperclip", "~> 5.0.0"
 gem 'dotenv-rails', groups: [:development]
 gem 'aws-sdk', '~> 2'
+gem 'underscore-rails'
+gem 'gmaps4rails'

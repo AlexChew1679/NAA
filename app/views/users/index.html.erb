@@ -1,6 +1,6 @@
 <div class="container">
   <h2>List Users</h2>
-  <p class="text-right">  
+  <p class="text-right">
     <%=link_to 'New User', new_user_path %>
   </p>
 
@@ -15,7 +15,7 @@
         <th>Firstname</th>
         <th>Lastname</th>
         <th>Email</th>
-        <th colspan="2">Actions</th>        
+        <th colspan="2">Actions</th>
       </tr>
     </thead>
     <tbody>
@@ -24,7 +24,7 @@
       <tr>
         <td><%= user.first_name %></td>
         <td><%= user.last_name %></td>
-        <td><%= user.email %></td>        
+        <td><%= user.email %></td>
         <td><%= link_to 'Edit', edit_user_path(user) %> </td>
         <td><%= link_to 'Delete',user_path(user), method: :delete, data: {confirm: "Are you sure?"} %> </td>
       </tr>
@@ -32,4 +32,6 @@
 
     </tbody>
   </table>
+
+  
 </div>

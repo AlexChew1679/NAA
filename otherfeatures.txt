@@ -1,0 +1,238 @@
+CREATE GOOGLE MAP API  and PAPERCLIP
+
+    Add new gems: 'underscore-rails', and 'gmaps4rails' for Gooogle Map.
+    https://github.com/apneadiving/Google-Maps-for-Rails
+
+    - Gemfile: 
+Add new gems: 'underscore-rails', and 'gmaps4rails' for Gooogle Map.
+
+- Config/application.rb : 
+
+
+- Javascripts:
+app/assets/javascripts/
+                                    //= require underscore
+                                    //= require gmaps/google
+
+- Controllers:
+app/controller/tasks_controller.rb
+
+                          def show
+                              @task = Task.find(params[:id])
+
+                              # Show data map
+                              _latitude = '35.681298'
+                              _longitude = '139.7640529'
+                              _name = '東京駅'
+
+                              @hash = Gmaps4rails.build_markers(@task) do |place, marker|
+                                marker.lat _latitude
+                                marker.lng _longitude
+                                marker.infowindow _name
+                              end
+                          end
+
+
+
+
+
+
+- Views:
+app/views/tasks/show.html.erb
+
+
+                                    <div style='width: 800px;'>
+                                      <div id="map" style='width: 800px; height: 400px;'></div>
+                                    </div>
+
+                                    <script type="text/javascript">
+                                      handler = Gmaps.build('Google');
+                                      handler.buildMap({ provider: {}, internal: {id: 'map'}}, function(){
+                                        markers = handler.addMarkers([
+                                          {
+                                            "lat": 3.1349,
+                                            "lng": 101.6299,
+                                            "picture": {
+                                              "url": "https://addons.cdn.mozilla.net/img/uploads/addon_icons/13/13028-64.png",
+                                              "width":  64,
+                                              "height": 64
+                                            },
+                                            "infowindow": "Alex is Here!"
+                                          }
+                                        ]);
+                                        handler.bounds.extendWith(markers);
+                                        handler.fitMapToBounds();
+                                      });
+
+
+                                    </script>
+
+PAPERCLIP
+
+
+app/views/tasks/_form.html.erb
+
+
+                              <%= bootstrap_form_for(@task, url: (@task.new_record? ? tasks_path : task_path(@task))) do |f| %>
+                                    <%= f.text_field :content %>
+                                    <%= f.text_field :state %> Choose State: to_do, doing, done
+                                    <%= f.file_field :image %>   <= Add this
+                                    <%= f.submit 'Save' %>
+                                <% end %>
+
+      - Models:
+      app/models/tasks.rb
+
+                                        class Task < ApplicationRecord
+                                          validates :content, presence: true, length: {minimum: 5, maximum: 100}
+
+
+                                          has_attached_file :image
+                                          validates_attachment :image, presence: true ,
+                                          content_type: { content_type: ["image/jpeg", "image/gif", "image/png"] },
+                                          message: 'Only Images allowed'
+
+                                          belongs_to :user
+                                          has_attached_file :image, styles: { small: "64x64", med: "100x100", large: "200x200" }
+                                          has_attached_file :resource
+                                        end
+
+
+  SEARCH ENGINE :
+
+  create views/users/index.html.erb
+
+                                      <div class="container">
+                                        <h2>List Users</h2>
+                                        <p class="text-right">
+                                          <%=link_to 'New User', new_user_path %>
+                                        </p>
+
+                                        <%= form_tag(users_path, :method => "get", id: "search-form") do %>
+                                        <%= text_field_tag :search, params[:search], placeholder: "Search Posts" %>
+                                        <%= submit_tag "Search" %>
+                                        <% end %>
+
+                                        <table class="table table-striped table-bordered">
+                                          <thead>
+                                            <tr>
+                                              <th>Firstname</th>
+                                              <th>Lastname</th>
+                                              <th>Email</th>
+                                              <th colspan="2">Actions</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+
+                                            <% @user.each do |user|  %>
+                                            <tr>
+                                              <td><%= user.first_name %></td>
+                                              <td><%= user.last_name %></td>
+                                              <td><%= user.email %></td>
+                                              <td><%= link_to 'Edit', edit_user_path(user) %> </td>
+                                              <td><%= link_to 'Delete',user_path(user), method: :delete, data: {confirm: "Are you sure?"} %> </td>
+                                            </tr>
+                                            <%end%>
+
+                                          </tbody>
+                                        </table>
+
+
+                                      </div>
+
+controllers/users_controller.rb
+
+                                          def index
+                                            #Show all list users
+                                            @user = User.all
+                                            if params[:search]
+                                              @user = User.search(params[:search]).order("created_at DESC")
+                                            else
+                                              @user = User.all.order('created_at DESC')
+                                            end
+                                          end
+
+  models/user.rb
+
+                                          def self.search(search)
+                                            where("first_name LIKE ?", "%#{search}%")
+                                            where("last_name LIKE ?", "%#{search}%")
+                                            where("email LIKE ?", "%#{search}%")
+                                          end
+
+FACEBOOK
+
+                              Install 2 new gem is: omniauth and omniauth-facebook
+                              run command: bundle install
+
+                              Change FB APP ID and KEY
+                              Edit app_id and secret in file: config/facebook.yml
+
+      add line at view/sessions/new.html.erb
+
+                              <p>New User? <%= link_to 'Sign Up Now!', signup_path %></p>
+                              <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
+
+    config/routes.rb
+
+                                # Login with Facebook
+                                get '/auth/:provider/callback', :to => 'sessions#create'
+                                get '/auth/failure', :to => 'sessions#failure'
+
+    controllers/sessions_controller.rb
+
+                                  def create
+                                    if params[:session].present?
+                                      # Login normal
+                                      user = User.find_by(email: params[:session][:email].downcase)
+                                      if user && user.authenticate(params[:session][:password])
+                                        log_in user
+                                        params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+                                        remember user
+                                        redirect_to user
+                                        flash[:primary] = "You're now logged in"
+                                      else
+                                        flash.now[:danger] = 'Invalid email/password combination'
+                                        render 'new'
+                                      end
+                                    else
+                        =>              # Login Facebook
+                                      begin
+                                        user = User.from_omniauth(request.env['omniauth.auth'])
+                                        if user
+                                          log_in user
+                                          remember user
+                                          session[:user_id] = user.id
+                                          redirect_to user
+                                          flash[:primary] = "You're now logged in"
+                                        else
+                                          flash.now[:danger] = 'Invalid email/password combination'
+                                          render 'new'
+                                        end
+                                      rescue
+                                        flash[:warning] = "There was an error while trying to authenticate you..."
+                                      end
+
+                                    end
+                                  end
+
+        at models/user.rb
+
+                                        def self.from_omniauth(auth_hash)
+                                          user = find_or_create_by(uid: auth_hash['uid'], provider: auth_hash['provider'])
+                                          user.first_name = auth_hash['info']['first_name']
+                                          user.last_name = auth_hash['info']['last_name']
+                                          user.email = auth_hash['info']['email']
+                                          user.password = '123456'
+
+                                          user.save!
+                                          user
+                                        end
+
+                                        Default password for user login with Facebook set static is: '123456'.
+                                It's meaning: after login with FB, user can using their email and password (123456) or click login with facebook button also. Supported both 2 ways!
+
+            1.
+
+
+          facebook.yml  =>  Config/initializes/facebook.rb   => And then: config/initializes/omniauth.rb will read there config  => 

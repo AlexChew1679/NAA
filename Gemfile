@@ -65,3 +65,6 @@ gem "twitter-bootstrap-rails"
 gem 'underscore-rails'
 gem 'gmaps4rails'
 gem 'bootstrap_form'
+
+gem 'omniauth'
+gem 'omniauth-facebook' # Facebook authentication

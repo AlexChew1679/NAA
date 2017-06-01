@@ -10,4 +10,5 @@
         <%= f.submit 'Log In', class: 'expanded button' %>
     <% end %>
     <p>New User? <%= link_to 'Sign Up Now!', signup_path %></p>
+    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
   </div>

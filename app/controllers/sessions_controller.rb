@@ -16,23 +16,31 @@ class SessionsController < ApplicationController
       else
         flash.now[:danger] = 'Invalid email/password combination'
         render 'new'
-      end
-    else
-      # Login Facebook
+      end  
+    else      
+      # Login Facebook      
       begin
         user = User.from_omniauth(request.env['omniauth.auth'])
-        session[:user_id] = user.id
-        flash[:success] = "Welcome, #{user.email}!"
+        if user
+          log_in user          
+          remember user
+          session[:user_id] = user.id
+          redirect_to user
+          flash[:primary] = "You're now logged in"
+        else
+          flash.now[:danger] = 'Invalid email/password combination'
+          render 'new'
+        end
       rescue
         flash[:warning] = "There was an error while trying to authenticate you..."
       end
-      redirect_to root_path
+     
     end
   end
 
   def destroy
     log_out if logged_in?
-    flash[:primary]  = 'See You and GoodBye!'
+    #flash[:primary]  = 'Bye!'
     session[:user_id] = nil
     redirect_to root_path
   end

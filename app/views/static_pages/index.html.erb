@@ -4,6 +4,11 @@
 <h1>Welcome to TodoApp</h1>
 <p>Help you to increase your productivity</p>
 
-<%= link_to 'Sign Up', new_user_path, class: 'btn btn-primary btn-lg ' %>
-
+<% if current_user %>
+	<%= link_to 'View all Tasks', tasks_url, class: 'btn btn-primary btn-lg ' %>
+<% else %>
+	<%= link_to 'Login', login_url, class: 'btn btn-primary btn-lg ' %>
+	OR
+	<%= link_to 'Sign Up', new_user_path, class: 'btn btn-primary btn-lg ' %>
+<% end %>
 </div>

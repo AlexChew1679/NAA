@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   resources :users
   resources :tasks
   
-  root 'users#new'
+  # root 'users#new'
+  root 'static_pages#index'
 
   get 'static_pages/help'
   get 'signup', to: 'users#new'

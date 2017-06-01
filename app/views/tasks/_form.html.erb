@@ -9,7 +9,7 @@
 
 	<%= bootstrap_form_for(@task, url: (@task.new_record? ? tasks_path : task_path(@task))) do |f| %>
         <%= f.text_field :content %>
-        <%= f.text_field :state %>
+        <%= f.text_field :state %> Choose State: to_do, doing, done
         <%= f.file_field :image %>
         <%= f.submit 'Save' %>
     <% end %>

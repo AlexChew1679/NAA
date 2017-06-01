@@ -7,14 +7,9 @@
 </ul>
 <%end%>
 
-	<%= bootstrap_form_for(@task, url: (@task.new_record? ? tasks_path : task_path(@task))) do |f| %>            
-        <%= f.text_field :content %>        
-        <%= f.text_field :state %>        
+	<%= bootstrap_form_for(@task, url: (@task.new_record? ? tasks_path : task_path(@task))) do |f| %>
+        <%= f.text_field :content %>
+        <%= f.text_field :state %>
         <%= f.file_field :image %>
-        <%= f.file_field :resource %>
         <%= f.submit 'Save' %>
     <% end %>
-
-<p>
-  <%= link_to 'All Todos', tasks_path %>
-</p>

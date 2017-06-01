@@ -16,9 +16,9 @@ class SessionsController < ApplicationController
       else
         flash.now[:danger] = 'Invalid email/password combination'
         render 'new'
-      end  
-    else      
-      # Login Facebook      
+      end
+    else
+      # Login Facebook
       begin
         user = User.from_omniauth(request.env['omniauth.auth'])
         session[:user_id] = user.id
@@ -32,7 +32,7 @@ class SessionsController < ApplicationController
 
   def destroy
     log_out if logged_in?
-    #flash[:primary]  = 'Bye!'
+    flash[:primary]  = 'See You and GoodBye!'
     session[:user_id] = nil
     redirect_to root_path
   end

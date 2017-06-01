@@ -4,19 +4,19 @@
 
           <h2 id= "sign_up" > Sign Up </h2>
           <%= bootstrap_form_for(@user) do |f| %>
-              <%= f.text_field :first_name %>   
-              
+              <%= f.text_field :first_name %>
+
               <%= f.text_field :last_name %>
-              
+
               <%= f.email_field :email %>
-              
+
               <%= f.password_field :password %>
-              
+
               <%= f.password_field :password_confirmation %>
 
               <%= f.submit 'Create Account' %>
-                    
+
           <%end%>
-          <%= link_to 'Login', login_path %>
+        
           </div>
         </div>

@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20170530135106) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "tasks", force: :cascade do |t|
     t.text     "content"
     t.datetime "created_at",                              null: false
@@ -38,7 +41,7 @@ ActiveRecord::Schema.define(version: 20170530135106) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.string   "remember_digest"
-    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
 end

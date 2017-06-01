@@ -1,3 +1,7 @@
 development:
   app_id: '1859291274333211' #Enter App ID here
   secret: '841466c0d33a992b80971796a7dbee5e' #Enter App Secret here
+
+production:
+  app_id: '1859291274333211' #Enter App ID here
+  secret: '841466c0d33a992b80971796a7dbee5e' #Enter App Secret here

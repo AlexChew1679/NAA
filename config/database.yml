@@ -4,24 +4,42 @@
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
 #
-default: &default
-#adapter: sqlite3
-  adapter: postgresql
-  pool: 5
-  timeout: 5000
-
+#default: &default
+##adapter: sqlite3
+#  adapter: postgresql
+#  pool: 5
+#  timeout: 5000
+#
+#development:
+#  <<: *default
+#  #database: db/development.sqlite3
+#  database: db/todo_development
+#
+## Warning: The database defined as "test" will be erased and
+## re-generated from your development database when you run "rake".
+## Do not set this db to the same as development or production.
+#test:
+#  <<: *default
+#  database: db/todo_test
+#
+#production:
+#  <<: *default
+#  database: db/todo_production
+#
 development:
-  <<: *default
-  #database: db/development.sqlite3
-  database: db/todo_development
+      adapter: postgresql
+      database: todo_development
+      pool: 5
+      timeout: 500
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
 test:
-  <<: *default
-  database: db/todo_test
+      adapter: postgresql
+      database: todo_test
+      pool: 5
+      timeout: 500
 
 production:
-  <<: *default
-  database: db/todo_production
+      adapter: postgresql
+      database: todo_production
+      pool: 5
+      timeout: 500

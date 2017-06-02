@@ -18,3 +18,17 @@
 //= require gmaps/google
 //= require bootstrap
 //= require_tree .
+
+
+$(document).ready(function(){
+
+	$("#edit").hide()
+
+	$("#pro").on("click", function(){
+		if ($("#edit").attr("style") == "display: none;"){
+			$("#edit").show()
+		} else{
+			$("#edit").hide()
+		}
+	})
+})

@@ -23,7 +23,7 @@ app/controller/tasks_controller.rb
                               # Show data map
                               _latitude = '35.681298'
                               _longitude = '139.7640529'
-                              _name = '東京駅'
+                              _name = 'Alex'
 
                               @hash = Gmaps4rails.build_markers(@task) do |place, marker|
                                 marker.lat _latitude
@@ -235,4 +235,4 @@ FACEBOOK
             1.
 
 
-          facebook.yml  =>  Config/initializes/facebook.rb   => And then: config/initializes/omniauth.rb will read there config  => 
+          facebook.yml  =>  Config/initializes/facebook.rb   => And then: config/initializes/omniauth.rb will read there config  =>

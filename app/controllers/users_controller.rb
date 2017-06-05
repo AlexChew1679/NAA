@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
 
-#before_action :logged_in_user, only : [:edit, :update]
+before_action :logged_in_user, only: [:edit, :update]
 
           def index
             #Show all list users
@@ -59,13 +59,11 @@ class UsersController < ApplicationController
           params.require(:user).permit(:first_name, :last_name, :email, :password, :password_confirmation, :search)
         end
 
-        # def logged_in_user
-        #   unless logged_in?
-        #     flash[:alert] = 'Please login'
-        #     redirect_to login_url
-        #   end
-
-
-
+        def logged_in_user
+          unless logged_in?
+            flash[:alert] = 'Please login'
+            redirect_to login_url
+          end
+        end
 
       end

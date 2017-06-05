@@ -148,9 +148,11 @@ controllers/users_controller.rb
                                             if params[:search]
                                               @user = User.search(params[:search]).order("created_at DESC")
                                             else
-                                              @user = User.all.order('created_at DESC')
+                                              @user = User.all.order('created_at DESC')  <=NOTE
                                             end
                                           end
+
+NOTE:  create_at_DESC ... It's for sort order, newest records will be get first, is SQL code
 
   models/user.rb
 
